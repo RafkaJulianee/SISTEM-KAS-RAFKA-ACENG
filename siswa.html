@@ -1,0 +1,75 @@
+<!DOCTYPE html><html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Siswa - Web Kas Kelas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-white">
+   <a href="dashboard.html" class="btn btn-secondary">Kembali ke Dashboard</a>
+    </div>
+  <div class="container py-5">
+    <h2 class="mb-4">Data Siswa & Status Kas (Mingguan)</h2><table class="table table-bordered">
+  <thead class="table-dark">
+    <tr>
+      <th>No</th>
+      <th>Nama Siswa</th>
+      <th>Kelas</th>
+      <th>Status Kas</th>
+      <th>Total Bayar Minggu Ini</th>
+    </tr>
+  </thead>
+  <tbody id="siswaTable">
+    <!-- Data akan di-generate oleh JavaScript -->
+  </tbody>
+</table>
+
+  </div>  <script>
+    const siswaList = [
+      "ACENG WILDAN LAKSANA", "AFGHAN GENOVA SUDRAJAT", "AGIS RAMADANI",
+      "ALIF DENIS HERDIANTO", "ALIN JULIANI", "AULIA MARDIANA PUTRI",
+      "AULIA RAMADANI", "AYU NURAENI", "BAMBANG KAMAJAYA SURY SAPUTRA DININGRAT",
+      "CHARISTA CAMELIA", "DELISA YULIANTI", "DEUIS SITI MUNIFAH",
+      "DINAR RESKI FAUZI", "FADLIANSYAH RIZKI", "FAKIH SABIKUL HOER",
+      "HAMDAN", "IKHSAN MULIA APRIANA", "IMELDA NURCAHYANI",
+      "KURNIA", "MAHESWARI RIHADATUL AIS", "MOCHAMAD AL FAREL DWI SEPTIAN",
+      "NABIL ALPATH ABDUL ROZAI", "NAZWA FITRIYANI", "NINDY HENDRYANTY",
+      "PIR MAHARAN", "RAFKA JULIAN PRATAMA", "RARA NURUL FADHILAN",
+      "RESTI AWALIA", "SAEPUL ANWAR", "SAFFIYK QOISARO RUSTEND",
+      "SITI FARIDAN", "SITI NURWAHIDAH", "SYADRAN SITE GADAR",
+      "TIRTA IBNU WIBOWO", "YUNISHA RAMADHANI", "ZEINA VANKAAZAHRAU"
+    ];
+
+    const kasData = JSON.parse(localStorage.getItem("kasData")) || [];
+
+    function isThisWeek(dateStr) {
+      const date = new Date(dateStr);
+      const now = new Date();
+      const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
+      return date >= startOfWeek && date <= endOfWeek;
+    }
+
+    const tableBody = document.getElementById("siswaTable");
+
+    siswaList.forEach((nama, index) => {
+      const kasMingguIni = kasData
+        .filter(entry => entry.nama === nama && isThisWeek(entry.tanggal))
+        .reduce((total, entry) => total + entry.jumlah, 0);
+
+      const status = kasMingguIni >= 2000 ? "Lunas" : "Belum Lunas";
+      const warna = kasMingguIni >= 2000 ? "text-success" : "text-danger";
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${nama}</td>
+        <td>X RPL 1</td>
+        <td class="fw-bold ${warna}">${status}</td>
+        <td>Rp ${kasMingguIni.toLocaleString()}</td>
+      `;
+      tableBody.appendChild(row);
+    });
+  </script></body>
+</html>

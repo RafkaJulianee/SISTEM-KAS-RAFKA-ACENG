@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Uang Kas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .sidebar {
+  width: 300Spx;
+  min-height: 150vh;
+  background-color: #1d3557;
+  color: white;
+  border-radius: 10px; /* Menambahkan sudut melengkung */
+}
+
+.sidebar a {
+  color: white;
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  background-color: #457b9d;
+}
+
+.content {
+  padding: 30px;
+  margin-left: 100px; /* Menyesuaikan margin agar konten tidak tertutup sidebar */
+}
+
+.card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+  </style>
+</head>
+<body>
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar p-3">
+      <h4>UANG KAS</h4>
+      <div class="mb-3">admin</div>
+      <div class="bg-success text-white px-3 py-2 mb-2 rounded">Sisa Uang: <span id="sisaUangSidebar">Rp 0</span></div>
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="bendahara.html">Bendahara</a>
+      <a href="siswa.html">Siswa</a>
+      <a href="inputkas.html">Uang Kas</a>
+      <a href="pengeluarankas.html">Pengeluaran</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content flex-grow-1">
+      <h2>Dashboard</h2>
+      <div class="row mt-4">
+        <div class="col-md-3">
+          <div class="card p-3">
+            <h5>Bendahara</h5>
+            <p id="jmlBendahara">Jumlah: 2</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card p-3">
+            <h5>User</h5>
+            <p id="jmlUser">User: 3</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card p-3">
+            <h5>Siswa</h5>
+            <p id="jmlSiswa">Jumlah Siswa: 36</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card p-3">
+            <h5>Total Uang Kas</h5>
+            <p id="totalKas">Rp 0</p>
+          </div>
+        </div>
+        <div class="col-md-3 mt-3">
+          <div class="card p-3">
+            <h5>Pengeluaran</h5>
+            <p id="totalPengeluaran">Jumlah Pengeluaran: Rp 0</p>
+          </div>
+        </div>
+      </div>
+      <footer class="mt-4">
+        <p class="text-muted text-center">Copyright © 2023 WebKasKelas. All rights reserved.</p>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    
+    function hitungKasDashboard() {
+      const kasData = JSON.parse(localStorage.getItem("kasData")) || [];
+      const pengeluaranData = JSON.parse(localStorage.getItem("pengeluaranData")) || [];
+
+      const totalKas = kasData.reduce((sum, item) => sum + item.jumlah, 0);
+      const totalPengeluaran = pengeluaranData.reduce((sum, item) => sum + item.jumlah, 0);
+      const sisaKas = totalKas - totalPengeluaran;
+
+      document.getElementById("totalKas").textContent = Rp ${sisaKas.toLocaleString()};
+      document.getElementById("totalPengeluaran").textContent = Jumlah Pengeluaran: Rp ${totalPengeluaran.toLocaleString()};
+      document.getElementById("sisaUangSidebar").textContent = Rp ${sisaKas.toLocaleString()};
+    }
+
+    document.addEventListener("DOMContentLoaded", hitungKasDashboard);
+  </script>
+</body>
+</html>

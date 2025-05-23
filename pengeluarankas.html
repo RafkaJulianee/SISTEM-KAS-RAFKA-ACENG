@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pengeluaran Kas - Web Kas Kelas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Pengeluaran Kas</h2>
+      <a href="dashboard.html" class="btn btn-secondary">Kembali ke Dashboard</a>
+    </div>
+
+    <form id="formPengeluaran" class="mb-4">
+      <div class="mb-3">
+        <label for="keterangan" class="form-label">Keterangan Pengeluaran</label>
+        <input type="text" id="keterangan" class="form-control" required />
+      </div>
+      <div class="mb-3">
+        <label for="jumlah" class="form-label">Jumlah Pengeluaran (Rp)</label>
+        <input type="number" id="jumlah" class="form-control" required />
+      </div>
+      <button type="submit" class="btn btn-danger">Simpan Pengeluaran</button>
+    </form>
+
+    <h4 class="mb-3">Riwayat Pengeluaran</h4>
+    <ul class="list-group" id="listPengeluaran">
+      <!-- Riwayat akan ditampilkan di sini -->
+    </ul>
+  </div>
+
+  <script>
+    const form = document.getElementById("formPengeluaran");
+    const list = document.getElementById("listPengeluaran");
+
+    let pengeluaranData = JSON.parse(localStorage.getItem("pengeluaranData")) || [];
+
+    function renderPengeluaran() {
+      list.innerHTML = "";
+      pengeluaranData.slice().reverse().forEach(item => {
+        const li = document.createElement("li");
+        li.className = "list-group-item d-flex justify-content-between align-items-center";
+        li.innerHTML = `
+          <span>${item.keterangan} <br><small class="text-muted">${new Date(item.tanggal).toLocaleDateString()}</small></span>
+          <strong>Rp ${item.jumlah.toLocaleString()}</strong>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const keterangan = document.getElementById("keterangan").value;
+      const jumlah = parseInt(document.getElementById("jumlah").value);
+      const tanggal = new Date().toISOString();
+
+      pengeluaranData.push({ keterangan, jumlah, tanggal });
+      localStorage.setItem("pengeluaranData", JSON.stringify(pengeluaranData));
+
+      form.reset();
+      renderPengeluaran();
+    });
+
+    // Tampilkan data saat halaman dibuka
+    renderPengeluaran();
+  </script>
+</body>
+</html>
